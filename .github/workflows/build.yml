@@ -1,0 +1,23 @@
+name: Build AutoClear
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: unzip -o AutoClear-source.zip
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+          cache-dependency-path: AutoClear/pom.xml
+      - run: mvn --batch-mode clean package
+        working-directory: AutoClear
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AutoClear
+          path: AutoClear/target/AutoClear.jar
